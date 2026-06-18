@@ -99,7 +99,7 @@ public class NavigationHandler {
                         break;
                     case SPELLBOOK:
                         // Highlight the "Teleport to House" spell using correct child ID from widget inspector
-                        widgetHighlighter.interfaceOverlay(InterfaceID.MAGIC_SPELLBOOK, 32).render(graphics);
+                        widgetHighlighter.interfaceOverlay(InterfaceID.MAGIC_SPELLBOOK, Constants.SPELL_CHILD_TELEPORT_TO_HOUSE).render(graphics);
                         inHouseCheck();
                         break;
                 }
@@ -134,8 +134,14 @@ public class NavigationHandler {
         int currentRegionId = localPlayer.getWorldLocation().getRegionID();
         WorldPoint targetLocation = teleport.getPoint();
 
+        if (teleport != null && "Quetzal_Transport".equals(teleport.getEnumOption())
+                && Constants.isCivitasQuetzalRegion(currentRegionId)
+                && requiresQuetzalFromCivitas(location.getName())) {
+            return false;
+        }
+
         // Check if player is in the correct region
-        boolean inCorrectRegion = (currentRegionId == teleport.getRegionId());
+        boolean inCorrectRegion = isInTeleportRegion(location.getName(), teleport.getRegionId(), currentRegionId);
         
         // Check if player is near the target location (within 20 tiles)
         boolean nearTarget = areaCheck.isPlayerWithinArea(targetLocation, 20);
@@ -167,6 +173,26 @@ public class NavigationHandler {
         
         // Default: Continue with normal navigation
         return false;
+    }
+
+    private static boolean requiresQuetzalFromCivitas(String locationName) {
+        return "Kastori".equals(locationName)
+                || "Nemus Retreat".equals(locationName)
+                || "Aldarin".equals(locationName);
+    }
+
+    private static boolean isInTeleportRegion(String locationName, int teleportRegionId, int currentRegionId) {
+        if (currentRegionId == teleportRegionId) {
+            return true;
+        }
+        if ("Kastori".equals(locationName) && Constants.isKastoriRegion(currentRegionId)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean hasReachedItemTeleportDestination(String locationName, int teleportRegionId, int currentRegionId) {
+        return isInTeleportRegion(locationName, teleportRegionId, currentRegionId);
     }
     
     /**
@@ -227,7 +253,7 @@ public class NavigationHandler {
         WorldPoint targetLocation = teleport.getPoint();
         Color leftColor = colorProvider.getLeftClickColorWithAlpha();
         
-        boolean inCorrectRegion = (currentRegionId == teleport.getRegionId());
+        boolean inCorrectRegion = isInTeleportRegion(location.getName(), teleport.getRegionId(), currentRegionId);
         boolean nearTarget = areaCheck.isPlayerWithinArea(targetLocation, 20);
         boolean nearPatch = areaCheck.isPlayerWithinArea(targetLocation, 5);
         
@@ -235,6 +261,13 @@ public class NavigationHandler {
         if (nearPatch) {
             patchHighlighter.highlightFarmingPatchesForLocation(location.getName(), graphics,
                     patchType, leftColor, leftColor);
+            return;
+        }
+
+        if (teleport != null && "Quetzal_Transport".equals(teleport.getEnumOption())
+                && Constants.isCivitasQuetzalRegion(currentRegionId)
+                && requiresQuetzalFromCivitas(location.getName())) {
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.QUETZAL_TRANSPORT_OBJECT_ID, leftColor);
             return;
         }
         
@@ -328,7 +361,7 @@ public class NavigationHandler {
                 Widget widget = client.getWidget(teleport.getInterfaceGroupId(), teleport.getInterfaceChildId());
                 widgetHighlighter.highlightDynamicComponent(graphics, widget, 1);
             }
-            if (currentRegionId == teleport.getRegionId()) {
+            if (hasReachedItemTeleportDestination(location.getName(), teleport.getRegionId(), currentRegionId)) {
                 this.currentTeleportCase = 1;
                 isAtDestination = true;
                 if (location.getFarmLimps()) {
@@ -385,7 +418,7 @@ public class NavigationHandler {
                     itemHighlighter.itemHighlight(graphics, teleport.getId(), leftColor);
                 }
             }
-            if (currentRegionId == teleport.getRegionId()) {
+            if (hasReachedItemTeleportDestination(location.getName(), teleport.getRegionId(), currentRegionId)) {
                 this.currentTeleportCase = 1;
                 isAtDestination = true;
                 if (location.getFarmLimps()) {
@@ -405,9 +438,7 @@ public class NavigationHandler {
             case 2:
                 if (!widgetHelper.isInterfaceOpen(17, 0)) {
                     List<Integer> portalNexusIds = gameObjectHelper.getGameObjectIdsByName("Portal Nexus");
-                    for (Integer objectId : portalNexusIds) {
-                        gameObjectHighlighter.highlightGameObject(objectId, leftColor).render(graphics);
-                    }
+                    gameObjectHighlighter.renderGameObjectHighlights(graphics, portalNexusIds, leftColor);
                 } else {
                     Widget widget = client.getWidget(Constants.INTERFACE_PORTAL_NEXUS, Constants.INTERFACE_PORTAL_NEXUS_CHILD);
                     int index = widgetHelper.getChildIndexPortalNexus(location.getName());
@@ -428,9 +459,7 @@ public class NavigationHandler {
         Color leftColor = colorProvider.getLeftClickColorWithAlpha();
         
         if (!widgetHelper.isInterfaceOpen(187, 3)) {
-            for (Integer objectId : Constants.SPIRIT_TREE_IDS) {
-                gameObjectHighlighter.highlightGameObject(objectId, leftColor).render(graphics);
-            }
+            farmingTeleportSceneOverlay.requestSpiritTreeHighlight(leftColor);
         } else {
             Widget widget = client.getWidget(Constants.INTERFACE_SPIRIT_TREE, Constants.INTERFACE_SPIRIT_TREE_CHILD);
             switch (location.getName()) {
@@ -470,10 +499,8 @@ public class NavigationHandler {
             case 2:
                 List<Integer> jewelleryBoxIds = Constants.JEWELLERY_BOX_IDS;
                 if (!widgetHelper.isInterfaceOpen(Constants.INTERFACE_JEWELLERY_BOX_OPEN, 0)) {
-                    for (int id : jewelleryBoxIds) {
-                        gameObjectHighlighter.highlightGameObject(id, leftColor).render(graphics);
-                    }
-                    gameObjectHighlighter.highlightGameObject(teleport.getId(), leftColor).render(graphics);
+                    gameObjectHighlighter.renderGameObjectHighlights(graphics, jewelleryBoxIds, leftColor);
+                    gameObjectHighlighter.renderGameObjectHighlight(graphics, teleport.getId(), leftColor);
                 } else {
                     Widget widget = client.getWidget(Constants.INTERFACE_JEWELLERY_BOX_OPEN, Constants.WIDGET_JEWELLERY_BOX_CHILD);
                     widgetHighlighter.highlightDynamicComponent(graphics, widget, 10);
@@ -519,7 +546,7 @@ public class NavigationHandler {
     private void handleFairyRingTeleport(Graphics2D graphics, Teleport teleport, Location location, int currentRegionId) {
         Color leftColor = colorProvider.getLeftClickColorWithAlpha();
         
-        gameObjectHighlighter.highlightGameObject(Constants.FAIRY_RING_OBJECT_ID, leftColor).render(graphics);
+        gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.FAIRY_RING_OBJECT_ID, leftColor);
         
         if (currentRegionId == teleport.getRegionId()) {
             this.currentTeleportCase = 1;

@@ -4,6 +4,7 @@ import com.easyfarming.EasyFarmingConfig;
 import com.easyfarming.ItemRequirement;
 import com.easyfarming.core.Location;
 import com.easyfarming.core.Teleport;
+import com.easyfarming.utils.Constants;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
 
@@ -79,8 +80,8 @@ public class FaladorLocationData {
             "Teleport to Falador with standard spellbook, and run south-east.",
             0,
             "",
-            218,
-            33,
+            Constants.INTERFACE_MAGIC_SPELLBOOK,
+            Constants.SPELL_CHILD_FALADOR_TELEPORT,
             11828,
             FALADOR_HERB_PATCH_POINT,
             Arrays.asList(

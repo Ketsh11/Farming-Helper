@@ -255,25 +255,39 @@ public class GameObjectHighlighter {
     }
     
     /**
+     * Draws highlights for all scene objects matching {@code objectId} without allocating an overlay.
+     */
+    public void renderGameObjectHighlight(Graphics2D graphics, int objectId, Color color) {
+        for (GameObject gameObject : findGameObjectsByID(objectId)) {
+            drawGameObjectClickbox(graphics, gameObject, color);
+        }
+        for (DecorativeObject decorativeObject : findDecorativeObjectsByID(objectId)) {
+            drawTileObjectClickbox(graphics, decorativeObject, color);
+        }
+        for (GroundObject groundObject : findGroundObjectsByID(objectId)) {
+            drawTileObjectClickbox(graphics, groundObject, color);
+        }
+    }
+
+    /**
+     * Draws highlights for multiple object ids (each id uses the scene cache from {@link #findGameObjectsByID}).
+     */
+    public void renderGameObjectHighlights(Graphics2D graphics, Iterable<Integer> objectIds, Color color) {
+        for (Integer objectId : objectIds) {
+            if (objectId != null) {
+                renderGameObjectHighlight(graphics, objectId, color);
+            }
+        }
+    }
+    
+    /**
      * Creates an overlay that highlights a game object by ID.
      */
     public Overlay highlightGameObject(int objectId, Color color) {
         return new Overlay() {
             @Override
             public Dimension render(Graphics2D graphics) {
-                Client client = plugin.getClient();
-                if (client != null) {
-                    List<GameObject> gameObjects = findGameObjectsByID(objectId);
-                    for (GameObject gameObject : gameObjects) {
-                        drawGameObjectClickbox(graphics, gameObject, color);
-                    }
-                    for (DecorativeObject decorativeObject : findDecorativeObjectsByID(objectId)) {
-                        drawTileObjectClickbox(graphics, decorativeObject, color);
-                    }
-                    for (GroundObject groundObject : findGroundObjectsByID(objectId)) {
-                        drawTileObjectClickbox(graphics, groundObject, color);
-                    }
-                }
+                renderGameObjectHighlight(graphics, objectId, color);
                 return null;
             }
         };

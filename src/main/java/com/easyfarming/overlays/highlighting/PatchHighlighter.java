@@ -28,7 +28,7 @@ public class PatchHighlighter {
     
     public void highlightHerbPatches(Graphics2D graphics, Color color) {
         for (Integer patchId : farmingHelperOverlay.getHerbPatchIds()) {
-            gameObjectHighlighter.highlightGameObject(patchId, color).render(graphics);
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, patchId, color);
         }
     }
 
@@ -36,12 +36,12 @@ public class PatchHighlighter {
      * Highlights a specific herb patch by object ID (for current location).
      */
     public void highlightSpecificHerbPatch(Graphics2D graphics, int objectId, Color color) {
-        gameObjectHighlighter.highlightGameObject(objectId, color).render(graphics);
+        gameObjectHighlighter.renderGameObjectHighlight(graphics, objectId, color);
     }
 
     public void highlightFlowerPatches(Graphics2D graphics, Color color) {
         for (Integer patchId : farmingHelperOverlay.getFlowerPatchIds()) {
-            gameObjectHighlighter.highlightGameObject(patchId, color).render(graphics);
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, patchId, color);
         }
     }
     
@@ -49,7 +49,7 @@ public class PatchHighlighter {
         for (List<Integer> patchIds : Constants.ALLOTMENT_PATCH_IDS_BY_LOCATION.values()) {
             for (Integer patchId : patchIds) {
                 if (patchId == null) continue;
-                gameObjectHighlighter.highlightGameObject(patchId, color).render(graphics);
+                gameObjectHighlighter.renderGameObjectHighlight(graphics, patchId, color);
             }
         }
     }
@@ -61,24 +61,32 @@ public class PatchHighlighter {
      * @param color The color to use for highlighting
      */
     public void highlightSpecificAllotmentPatch(Graphics2D graphics, int objectId, Color color) {
-        gameObjectHighlighter.highlightGameObject(objectId, color).render(graphics);
+        gameObjectHighlighter.renderGameObjectHighlight(graphics, objectId, color);
     }
     
     public void highlightTreePatches(Graphics2D graphics, Color color) {
         for (Integer patchId : farmingHelperOverlay.getTreePatchIds()) {
-            gameObjectHighlighter.highlightGameObject(patchId, color).render(graphics);
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, patchId, color);
         }
+    }
+
+    public void highlightSpecificTreePatch(Graphics2D graphics, int objectId, Color color) {
+        gameObjectHighlighter.renderGameObjectHighlight(graphics, objectId, color);
     }
     
     public void highlightFruitTreePatches(Graphics2D graphics, Color color) {
         for (Integer patchId : farmingHelperOverlay.getFruitTreePatchIds()) {
-            gameObjectHighlighter.highlightGameObject(patchId, color).render(graphics);
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, patchId, color);
         }
+    }
+
+    public void highlightSpecificFruitTreePatch(Graphics2D graphics, int objectId, Color color) {
+        gameObjectHighlighter.renderGameObjectHighlight(graphics, objectId, color);
     }
     
     public void highlightHopsPatches(Graphics2D graphics, Color color) {
         for (Integer patchId : farmingHelperOverlay.getHopsPatchIds()) {
-            gameObjectHighlighter.highlightGameObject(patchId, color).render(graphics);
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, patchId, color);
         }
     }
     
@@ -89,7 +97,7 @@ public class PatchHighlighter {
      * @param color The color to use for highlighting
      */
     public void highlightSpecificHopsPatch(Graphics2D graphics, int objectId, Color color) {
-        gameObjectHighlighter.highlightGameObject(objectId, color).render(graphics);
+        gameObjectHighlighter.renderGameObjectHighlight(graphics, objectId, color);
     }
     
     /**
@@ -99,7 +107,41 @@ public class PatchHighlighter {
      * @param color The color to use for highlighting
      */
     public void highlightSpecificFlowerPatch(Graphics2D graphics, int objectId, Color color) {
-        gameObjectHighlighter.highlightGameObject(objectId, color).render(graphics);
+        gameObjectHighlighter.renderGameObjectHighlight(graphics, objectId, color);
+    }
+
+    private void highlightPatchForLocation(String locationName, String patchType, Graphics2D graphics, Color color) {
+        Integer patchId = null;
+        switch (patchType) {
+            case PatchTypes.TREE:
+                patchId = farmingHelperOverlay.getTreePatchIdForLocation(locationName);
+                break;
+            case PatchTypes.FRUIT_TREE:
+                patchId = farmingHelperOverlay.getFruitTreePatchIdForLocation(locationName);
+                break;
+            case PatchTypes.HOPS:
+                patchId = farmingHelperOverlay.getHopsPatchIdForLocation(locationName);
+                break;
+            default:
+                break;
+        }
+        if (patchId != null) {
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, patchId, color);
+            return;
+        }
+        switch (patchType) {
+            case PatchTypes.TREE:
+                highlightTreePatches(graphics, color);
+                break;
+            case PatchTypes.FRUIT_TREE:
+                highlightFruitTreePatches(graphics, color);
+                break;
+            case PatchTypes.HOPS:
+                highlightHopsPatches(graphics, color);
+                break;
+            default:
+                break;
+        }
     }
     
     /**
@@ -134,17 +176,17 @@ public class PatchHighlighter {
                 break;
             case PatchTypes.TREE:
                 if (isTreeLocation(locationName)) {
-                    highlightTreePatches(graphics, leftClickColor);
+                    highlightPatchForLocation(locationName, patchType, graphics, leftClickColor);
                 }
                 break;
             case PatchTypes.FRUIT_TREE:
                 if (isFruitTreeLocation(locationName)) {
-                    highlightFruitTreePatches(graphics, leftClickColor);
+                    highlightPatchForLocation(locationName, patchType, graphics, leftClickColor);
                 }
                 break;
             case PatchTypes.HOPS:
                 if (isHopsLocation(locationName)) {
-                    highlightHopsPatches(graphics, leftClickColor);
+                    highlightPatchForLocation(locationName, patchType, graphics, leftClickColor);
                 }
                 break;
             default:

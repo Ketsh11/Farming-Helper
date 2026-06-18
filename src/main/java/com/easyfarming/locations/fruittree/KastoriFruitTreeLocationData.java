@@ -4,6 +4,7 @@ import com.easyfarming.EasyFarmingConfig;
 import com.easyfarming.ItemRequirement;
 import com.easyfarming.core.Location;
 import com.easyfarming.core.Teleport;
+import com.easyfarming.utils.Constants;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
 
@@ -35,9 +36,9 @@ public class KastoriFruitTreeLocationData {
                 "Teleport to Civitas with Civitas teleport spell, then use the Quetzal Transport System to Kastori and run north to the fruit tree patch.",
                 0,
                 "",
-                218,
-                44,
-                6704,
+                Constants.INTERFACE_MAGIC_SPELLBOOK,
+                Constants.SPELL_CHILD_FORTIS_TELEPORT,
+                Constants.REGION_CIVITAS_QUETZAL,
                 new WorldPoint(1586, 3099, 0),
                 Arrays.asList(
                         new ItemRequirement(ItemID.LAWRUNE, 2),

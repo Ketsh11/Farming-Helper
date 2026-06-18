@@ -63,8 +63,8 @@ public class LumbridgeHopsLocationData {
             "Teleport to Lumbridge with spellbook, and run north to hops patch.",
             0,
             "",
-            218,
-            30,
+            Constants.INTERFACE_MAGIC_SPELLBOOK,
+            Constants.SPELL_CHILD_LUMBRIDGE_TELEPORT,
             12851,
             LUMBRIDGE_HOPS_PATCH_POINT,
             Arrays.asList(
@@ -113,8 +113,8 @@ public class LumbridgeHopsLocationData {
             "Teleport to Varrock with spellbook, and run south to hops patch.",
             0,
             "",
-            218,
-            27,
+            Constants.INTERFACE_MAGIC_SPELLBOOK,
+            Constants.SPELL_CHILD_VARROCK_TELEPORT,
             12853,
             LUMBRIDGE_HOPS_PATCH_POINT,
             Arrays.asList(

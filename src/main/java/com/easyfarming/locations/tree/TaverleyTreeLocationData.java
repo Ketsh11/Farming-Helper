@@ -4,6 +4,7 @@ import com.easyfarming.EasyFarmingConfig;
 import com.easyfarming.ItemRequirement;
 import com.easyfarming.core.Location;
 import com.easyfarming.core.Teleport;
+import com.easyfarming.utils.Constants;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
 
@@ -51,8 +52,8 @@ public class TaverleyTreeLocationData {
             Teleport.Category.SPELLBOOK,
             "Teleport to Falador with spellbook and run to Taverley.",            0,
             "",
-            218,
-            30,
+            Constants.INTERFACE_MAGIC_SPELLBOOK,
+            Constants.SPELL_CHILD_FALADOR_TELEPORT,
             11828,
             TAVERLEY_TREE_PATCH_POINT,
             Arrays.asList(

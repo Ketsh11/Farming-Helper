@@ -4,6 +4,7 @@ import com.easyfarming.EasyFarmingConfig;
 import com.easyfarming.ItemRequirement;
 import com.easyfarming.core.Location;
 import com.easyfarming.core.Teleport;
+import com.easyfarming.utils.Constants;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
 
@@ -65,9 +66,9 @@ public class AldarinHopsLocationData {
             "Teleport to Civitas with Civitas teleport spell, then fly Renu to Aldarin. Run north to hops patch.",
             0,
             "",
-            218, // Spellbook interface group ID
-            44,  // Civitas teleport interface child ID
-            6704, // Civitas region ID (teleport can land in 6704 or 6705)
+            Constants.INTERFACE_MAGIC_SPELLBOOK,
+            Constants.SPELL_CHILD_FORTIS_TELEPORT,
+            Constants.REGION_CIVITAS_QUETZAL, // Civitas region ID (teleport can land in 6704 or 6705)
             new WorldPoint(1586, 3099, 0), // Civitas/Hunter's Guild point
             Arrays.asList(
                 new ItemRequirement(ItemID.LAWRUNE, 2),

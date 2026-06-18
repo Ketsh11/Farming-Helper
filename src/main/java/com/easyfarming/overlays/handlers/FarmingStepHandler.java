@@ -248,10 +248,10 @@ public class FarmingStepHandler {
         // Check if player is in Civitas and using Quetzal_Transport for Aldarin
         // Civitas teleport can land in either region 6704 or 6705
         // If so, show instructions to use Renu to fly to Aldarin
-        if ((currentRegionId == 6704 || currentRegionId == 6705) && teleport != null && 
+        if ((Constants.isCivitasQuetzalRegion(currentRegionId)) && teleport != null && 
             "Quetzal_Transport".equals(teleport.getEnumOption())) {
             plugin.addTextToInfoBox("Fly Renu to Aldarin.");
-            gameObjectHighlighter.highlightGameObject(52815, useItemColor).render(graphics);
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.QUETZAL_TRANSPORT_OBJECT_ID, useItemColor);
             return;
         }
         
@@ -592,9 +592,25 @@ public class FarmingStepHandler {
     }
 
     private static boolean isKastoriFruitTreeRegion(int regionId) {
-        return regionId == Constants.REGION_KASTORI
-                || regionId == Constants.REGION_KASTORI_ALT1
-                || regionId == Constants.REGION_KASTORI_ALT2;
+        return Constants.isKastoriRegion(regionId);
+    }
+
+    private void highlightTreePatchForLocation(Graphics2D graphics, String locationName, Color color) {
+        Integer patchId = locationName != null ? farmingHelperOverlay.getTreePatchIdForLocation(locationName) : null;
+        if (patchId != null) {
+            patchHighlighter.highlightSpecificTreePatch(graphics, patchId, color);
+        } else {
+            patchHighlighter.highlightTreePatches(graphics, color);
+        }
+    }
+
+    private void highlightFruitTreePatchForLocation(Graphics2D graphics, String locationName, Color color) {
+        Integer patchId = locationName != null ? farmingHelperOverlay.getFruitTreePatchIdForLocation(locationName) : null;
+        if (patchId != null) {
+            patchHighlighter.highlightSpecificFruitTreePatch(graphics, patchId, color);
+        } else {
+            patchHighlighter.highlightFruitTreePatches(graphics, color);
+        }
     }
     
     /**
@@ -1034,14 +1050,9 @@ public class FarmingStepHandler {
 
         if (teleport != null) {
             if ("Quetzal_Transport".equals(teleport.getEnumOption())) {
-                if (currentRegionId == 6704) {
+                if (Constants.isCivitasQuetzalRegion(currentRegionId)) {
                     plugin.addTextToInfoBox("Fly Renu to Auburnvale.");
-                    gameObjectHighlighter.highlightGameObject(52815, useItemColor).render(graphics);
-                    return;
-                }
-                if (currentRegionId == 6705) {
-                    plugin.addTextToInfoBox("Fly Renu to Auburnvale.");
-                    gameObjectHighlighter.highlightGameObject(52815, useItemColor).render(graphics);
+                    gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.QUETZAL_TRANSPORT_OBJECT_ID, useItemColor);
                     return;
                 }
             }
@@ -1055,6 +1066,8 @@ public class FarmingStepHandler {
             plantState = TreePatchChecker.checkTreePatch(client, Constants.VARBIT_TREE_PATCH_STANDARD);
         }
 
+        String treeLocationName = getTreeLocationNameFromRegionId(currentRegionId);
+
         // Instructions follow the active run step whenever we have a teleport context — not player distance to the patch.
         if (teleport == null) {
             // Transitioning between locations.
@@ -1062,24 +1075,24 @@ public class FarmingStepHandler {
             switch (plantState) {
                 case HEALTHY:
                     plugin.addTextToInfoBox("Check tree health.");
-                    patchHighlighter.highlightTreePatches(graphics, leftColor);
+                    highlightTreePatchForLocation(graphics, treeLocationName, leftColor);
                     break;
                 case WEEDS:
                     plugin.addTextToInfoBox("Rake the tree patch.");
-                    patchHighlighter.highlightTreePatches(graphics, leftColor);
+                    highlightTreePatchForLocation(graphics, treeLocationName, leftColor);
                     break;
                 case DEAD:
                     plugin.addTextToInfoBox("Clear the dead tree patch.");
-                    patchHighlighter.highlightTreePatches(graphics, leftColor);
+                    highlightTreePatchForLocation(graphics, treeLocationName, leftColor);
                     break;
                 case PLANT:
                     plugin.addTextToInfoBox("Use Sapling on the patch.");
-                    patchHighlighter.highlightTreePatches(graphics, useItemColor);
+                    highlightTreePatchForLocation(graphics, treeLocationName, useItemColor);
                     itemHighlighter.highlightTreeSapling(graphics);
                     break;
                 case DISEASED:
                     plugin.addTextToInfoBox("Prune the tree patch.");                    
-                    patchHighlighter.highlightTreePatches(graphics, useItemColor);
+                    highlightTreePatchForLocation(graphics, treeLocationName, useItemColor);
                     break;
                 case REMOVE:
                     plugin.addTextToInfoBox("Pay to remove tree, or cut it down and clear the patch.");
@@ -1153,6 +1166,13 @@ public class FarmingStepHandler {
         FruitTreePatchChecker.PlantState plantState = FruitTreePatchChecker.PlantState.UNKNOWN;
         Color leftColor = colorProvider.getLeftClickColorWithAlpha();
         Color useItemColor = colorProvider.getHighlightUseItemWithAlpha();
+
+        if (teleport != null && "Quetzal_Transport".equals(teleport.getEnumOption())
+                && Constants.isCivitasQuetzalRegion(currentRegionId)) {
+            plugin.addTextToInfoBox("Use the Quetzal Transport System to fly to Kastori.");
+            gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.QUETZAL_TRANSPORT_OBJECT_ID, useItemColor);
+            return;
+        }
         
         // Get location name from region ID
         String locationName = getFruitTreeLocationNameFromRegionId(currentRegionId);
@@ -1190,7 +1210,7 @@ public class FarmingStepHandler {
             switch (plantState) {
                 case HEALTHY:
                     plugin.addTextToInfoBox("Check Fruit tree health.");
-                    patchHighlighter.highlightFruitTreePatches(graphics, leftColor);
+                    highlightFruitTreePatchForLocation(graphics, locationName, leftColor);
                     break;
                 case WEEDS:
                     // Check if value is 3 (fully raked, ready to plant)
@@ -1198,26 +1218,26 @@ public class FarmingStepHandler {
                     if (varbitValue == 3) {
                         // Fully raked patch, ready to plant
                         plugin.addTextToInfoBox("Use Sapling on the patch.");
-                        patchHighlighter.highlightFruitTreePatches(graphics, useItemColor);
+                        highlightFruitTreePatchForLocation(graphics, locationName, useItemColor);
                         itemHighlighter.highlightFruitTreeSapling(graphics);
                     } else {
                         // Needs raking
                         plugin.addTextToInfoBox("Rake the fruit tree patch.");
-                        patchHighlighter.highlightFruitTreePatches(graphics, leftColor);
+                        highlightFruitTreePatchForLocation(graphics, locationName, leftColor);
                     }
                     break;
                 case DEAD:
                     plugin.addTextToInfoBox("Clear the dead fruit tree patch.");
-                    patchHighlighter.highlightFruitTreePatches(graphics, leftColor);
+                    highlightFruitTreePatchForLocation(graphics, locationName, leftColor);
                     break;
                 case PLANT:
                     plugin.addTextToInfoBox("Use Sapling on the patch.");
-                    patchHighlighter.highlightFruitTreePatches(graphics, useItemColor);
+                    highlightFruitTreePatchForLocation(graphics, locationName, useItemColor);
                     itemHighlighter.highlightFruitTreeSapling(graphics);
                     break;
                 case DISEASED:
                     plugin.addTextToInfoBox("Prune the fruit tree patch.");
-                    patchHighlighter.highlightFruitTreePatches(graphics, leftColor);
+                    highlightFruitTreePatchForLocation(graphics, locationName, leftColor);
                     break;
                 case REMOVE:
                     plugin.addTextToInfoBox("Pay to remove fruit tree, or cut it down and clear the patch.");

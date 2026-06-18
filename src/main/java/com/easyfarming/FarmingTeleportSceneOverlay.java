@@ -48,9 +48,7 @@ public class FarmingTeleportSceneOverlay extends Overlay {
             return null;
         }
         Color color = spiritTreeHighlightColor;
-        for (Integer objectId : Constants.SPIRIT_TREE_IDS) {
-            gameObjectHighlighter.highlightGameObject(objectId, color).render(graphics);
-        }
+        gameObjectHighlighter.renderGameObjectHighlights(graphics, Constants.SPIRIT_TREE_IDS, color);
         return null;
     }
 }

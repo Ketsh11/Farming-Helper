@@ -4,6 +4,7 @@ import com.easyfarming.EasyFarmingConfig;
 import com.easyfarming.ItemRequirement;
 import com.easyfarming.core.Location;
 import com.easyfarming.core.Teleport;
+import com.easyfarming.utils.Constants;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
 
@@ -63,8 +64,8 @@ public class ArdougneLocationData {
             "Teleport to Ardougne with standard spellbook, and run north.",
             0,
             "",
-            218,
-            45,
+            Constants.INTERFACE_MAGIC_SPELLBOOK,
+            Constants.SPELL_CHILD_ARDOUGNE_TELEPORT,
             10547,
             ARDOUGNE_HERB_PATCH_POINT,
             Arrays.asList(

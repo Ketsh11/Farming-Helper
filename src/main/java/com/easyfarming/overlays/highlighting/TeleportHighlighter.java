@@ -83,9 +83,7 @@ public class TeleportHighlighter {
             case PORTAL_NEXUS:
                 if (!widgetHelper.isInterfaceOpen(17, 0)) {
                     List<Integer> portalNexusIds = gameObjectHelper.getGameObjectIdsByName("Portal Nexus");
-                    for (Integer objectId : portalNexusIds) {
-                        gameObjectHighlighter.highlightGameObject(objectId, leftColor).render(graphics);
-                    }
+                    gameObjectHighlighter.renderGameObjectHighlights(graphics, portalNexusIds, leftColor);
                 } else {
                     Widget widget = client.getWidget(Constants.INTERFACE_PORTAL_NEXUS, Constants.INTERFACE_PORTAL_NEXUS_CHILD);
                     int index = widgetHelper.getChildIndexPortalNexus(teleport.getPoint().toString());
@@ -94,9 +92,7 @@ public class TeleportHighlighter {
                 break;
             case SPIRIT_TREE:
                 if (!widgetHelper.isInterfaceOpen(187, 3)) {
-                    for (Integer objectId : Constants.SPIRIT_TREE_IDS) {
-                        gameObjectHighlighter.highlightGameObject(objectId, leftColor).render(graphics);
-                    }
+                    farmingTeleportSceneOverlay.requestSpiritTreeHighlight(leftColor);
                 } else {
                     Widget widget = client.getWidget(Constants.INTERFACE_SPIRIT_TREE, Constants.INTERFACE_SPIRIT_TREE_CHILD);
                     int index = widgetHelper.getChildIndexSpiritTree(teleport.getPoint().toString());
@@ -104,14 +100,12 @@ public class TeleportHighlighter {
                 }
                 break;
             case FAIRY_RING:
-                gameObjectHighlighter.highlightGameObject(Constants.FAIRY_RING_OBJECT_ID, leftColor).render(graphics);
+                gameObjectHighlighter.renderGameObjectHighlight(graphics, Constants.FAIRY_RING_OBJECT_ID, leftColor);
                 break;
             case JEWELLERY_BOX:
                 if (!widgetHelper.isInterfaceOpen(Constants.INTERFACE_JEWELLERY_BOX, 0)) {
                     List<Integer> jewelleryBoxIds = gameObjectHelper.getGameObjectIdsByName("Jewellery Box");
-                    for (Integer objectId : jewelleryBoxIds) {
-                        gameObjectHighlighter.highlightGameObject(objectId, leftColor).render(graphics);
-                    }
+                    gameObjectHighlighter.renderGameObjectHighlights(graphics, jewelleryBoxIds, leftColor);
                 } else {
                     Widget widget = client.getWidget(Constants.INTERFACE_JEWELLERY_BOX, 0);
                     widgetHighlighter.highlightDynamicComponent(graphics, widget, 0);

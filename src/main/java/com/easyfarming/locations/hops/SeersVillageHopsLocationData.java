@@ -65,8 +65,8 @@ public class SeersVillageHopsLocationData {
             "Teleport to Camelot with standard spellbook, and run northwest to hops patch.",
             0,
             "",
-            218,
-            38,
+            Constants.INTERFACE_MAGIC_SPELLBOOK,
+            Constants.SPELL_CHILD_CAMELOT_TELEPORT,
             10551,
             SEERS_VILLAGE_HOPS_PATCH_POINT,
             Arrays.asList(
@@ -98,8 +98,8 @@ public class SeersVillageHopsLocationData {
             "Teleport to Seers Village with Camelot Teleport (requires hard Kandarin Diary), and run northwest to hops patch.",
             0,
             "",
-            218,
-            38,
+            Constants.INTERFACE_MAGIC_SPELLBOOK,
+            Constants.SPELL_CHILD_CAMELOT_TELEPORT,
             10551,
             SEERS_VILLAGE_HOPS_PATCH_POINT,
             Arrays.asList(

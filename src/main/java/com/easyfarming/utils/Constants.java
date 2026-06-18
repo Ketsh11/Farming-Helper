@@ -30,6 +30,11 @@ public class Constants {
     public static final int REGION_KASTORI = 5423;
     public static final int REGION_KASTORI_ALT1 = 5167;
     public static final int REGION_KASTORI_ALT2 = 5424;
+    /** Civitas / Hunter's Guild area used for Quetzal Transport from Civitas teleport spell. */
+    public static final int REGION_CIVITAS_QUETZAL = 6704;
+    public static final int REGION_CIVITAS_QUETZAL_ALT = 6705;
+    /** Quetzal Transport System object at Civitas (Renu and other birds). */
+    public static final int QUETZAL_TRANSPORT_OBJECT_ID = 52815;
     /** Auburnvale (Nemus Retreat tree patch); see RuneLite {@code FarmingWorld}. */
     public static final int REGION_AUBURNVALE = 5427;
     public static final int REGION_AUBURNVALE_ALT1 = 5428;
@@ -81,7 +86,30 @@ public class Constants {
     public static final int INTERFACE_FARMER = 219;
     public static final int INTERFACE_INVENTORY = 149;
     public static final int INTERFACE_MAGIC_SPELLBOOK = 218;
-    
+
+    /**
+     * Standard spellbook teleport widget child ids (interface 218).
+     * Values match RuneLite {@code InterfaceID} spellbook children after the minigame teleport spell was added.
+     */
+    public static final int SPELL_CHILD_VARROCK_TELEPORT = 26;
+    public static final int SPELL_CHILD_LUMBRIDGE_TELEPORT = 29;
+    public static final int SPELL_CHILD_FALADOR_TELEPORT = 32;
+    public static final int SPELL_CHILD_CAMELOT_TELEPORT = 37;
+    public static final int SPELL_CHILD_ARDOUGNE_TELEPORT = 44;
+    public static final int SPELL_CHILD_FORTIS_TELEPORT = 46;
+    public static final int SPELL_CHILD_WATCHTOWER_TELEPORT = 50;
+    public static final int SPELL_CHILD_TELEPORT_TO_HOUSE = 34;
+
+    public static boolean isKastoriRegion(int regionId) {
+        return regionId == REGION_KASTORI
+                || regionId == REGION_KASTORI_ALT1
+                || regionId == REGION_KASTORI_ALT2;
+    }
+
+    public static boolean isCivitasQuetzalRegion(int regionId) {
+        return regionId == REGION_CIVITAS_QUETZAL || regionId == REGION_CIVITAS_QUETZAL_ALT;
+    }
+
     // Widget IDs
     public static final int WIDGET_PORTAL_NEXUS_PARENT = 17;
     public static final int WIDGET_PORTAL_NEXUS_CHILD = 12;
@@ -155,6 +183,19 @@ public class Constants {
         // Standard tree patch rake/weeds cycle (RuneLite {@code PatchImplementation} TREE)
         8392, 8393, 8394, 8395
     ));
+
+    public static final Map<String, Integer> TREE_PATCH_IDS_BY_LOCATION;
+
+    static {
+        Map<String, Integer> patchMap = new HashMap<>();
+        patchMap.put("Falador", 8390);
+        patchMap.put("Farming Guild", 33732);
+        patchMap.put("Gnome Stronghold", 19147);
+        patchMap.put("Lumbridge", 8391);
+        patchMap.put("Taverley", 8388);
+        patchMap.put("Varrock", 8393);
+        TREE_PATCH_IDS_BY_LOCATION = Collections.unmodifiableMap(patchMap);
+    }
     
     public static final List<Integer> FRUIT_TREE_PATCH_IDS = Collections.unmodifiableList(Arrays.asList(
         7964, 7965, 34007, 7962, 26579, 7963,

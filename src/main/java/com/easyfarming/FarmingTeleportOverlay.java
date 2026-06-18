@@ -469,6 +469,8 @@ public class FarmingTeleportOverlay extends Overlay {
             removeOverlay();
             return null;
         }
+
+        farmingTeleportSceneOverlay.clearSpiritTreeHighlight();
         
         if (isAtDestination) {
             handleFarmingSteps(graphics);

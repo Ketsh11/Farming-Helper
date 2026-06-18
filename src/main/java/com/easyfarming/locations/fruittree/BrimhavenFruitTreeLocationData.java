@@ -4,6 +4,7 @@ import com.easyfarming.EasyFarmingConfig;
 import com.easyfarming.ItemRequirement;
 import com.easyfarming.core.Location;
 import com.easyfarming.core.Teleport;
+import com.easyfarming.utils.Constants;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
 
@@ -54,8 +55,8 @@ public class BrimhavenFruitTreeLocationData {
             "Teleport to Ardougne with Spellbook and take the boat to Brimhaven.",
             0,
             "",
-            218,
-            42,
+            Constants.INTERFACE_MAGIC_SPELLBOOK,
+            Constants.SPELL_CHILD_ARDOUGNE_TELEPORT,
             10547,
             BRIMHAVEN_FRUIT_TREE_PATCH_POINT,
             Arrays.asList(

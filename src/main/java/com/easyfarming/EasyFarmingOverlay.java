@@ -211,6 +211,10 @@ public class EasyFarmingOverlay extends Overlay {
         return Constants.HOPS_PATCH_IDS_BY_LOCATION.get(locationName);
     }
 
+    public Integer getTreePatchIdForLocation(String locationName) {
+        return Constants.TREE_PATCH_IDS_BY_LOCATION.get(locationName);
+    }
+
     /**
      * Gets fruit tree patch ID for a specific location.
      * 

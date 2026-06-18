@@ -4,6 +4,7 @@ import com.easyfarming.EasyFarmingConfig;
 import com.easyfarming.ItemRequirement;
 import com.easyfarming.core.Location;
 import com.easyfarming.core.Teleport;
+import com.easyfarming.utils.Constants;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
 
@@ -61,8 +62,8 @@ public class YanilleHopsLocationData {
             "Teleport to Yanille with Watchtower Teleport (requires hard Ardougne Diary), and run north to hops patch.",
             0,
             "",
-            218,
-            51,
+            Constants.INTERFACE_MAGIC_SPELLBOOK,
+            Constants.SPELL_CHILD_WATCHTOWER_TELEPORT,
             10288,
             YANILLE_HOPS_PATCH_POINT,
             Collections.singletonList(
@@ -77,8 +78,8 @@ public class YanilleHopsLocationData {
             "Teleport to Yanille with Watchtower Teleport (requires hard Ardougne Diary), and run north to hops patch.",
             0,
             "",
-            218,
-            51,
+            Constants.INTERFACE_MAGIC_SPELLBOOK,
+            Constants.SPELL_CHILD_WATCHTOWER_TELEPORT,
             10288,
             YANILLE_HOPS_PATCH_POINT,
             Collections.singletonList(
