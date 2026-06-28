@@ -407,6 +407,12 @@ public class Constants {
     public static final List<Integer> JEWELLERY_BOX_IDS = Collections.unmodifiableList(Arrays.asList(
         29154, 29155, 29156
     ));
+
+    public static final int POH_EXIT_PORTAL_OBJECT_ID = 4525;
+
+    public static final List<Integer> POH_PORTAL_NEXUS_IDS = Collections.unmodifiableList(Arrays.asList(
+        13647
+    ));
     
     /**
      * Decorative object IDs for mounted Xeric's talisman in the POH (used with
