@@ -1110,6 +1110,7 @@ public class EasyFarmingOverlay extends Overlay {
         if (itemId == ItemID.BUCKET_COMPOST ||
                 itemId == ItemID.BUCKET_SUPERCOMPOST ||
                 itemId == ItemID.BUCKET_ULTRACOMPOST ||
+                itemId == ItemID.FOSSIL_VOLCANIC_ASH ||
                 Constants.BOTTOMLESS_COMPOST_BUCKET_ITEM_IDS.contains(itemId)) {
             return true;
         }

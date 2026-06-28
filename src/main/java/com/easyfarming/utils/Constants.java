@@ -1,5 +1,6 @@
 package com.easyfarming.utils;
 
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.ObjectID;
 import net.runelite.api.gameval.VarbitID;
@@ -99,6 +100,18 @@ public class Constants {
     public static final int SPELL_CHILD_FORTIS_TELEPORT = 46;
     public static final int SPELL_CHILD_WATCHTOWER_TELEPORT = 50;
     public static final int SPELL_CHILD_TELEPORT_TO_HOUSE = 34;
+    public static final int SPELL_CHILD_FERTILE_SOIL = InterfaceID.MagicSpellbook.FERTILE_SOIL & 0xFFFF;
+    public static final int SPELL_CHILD_SPELLBOOK_SWAP = InterfaceID.MagicSpellbook.SPELLBOOK_SWAP & 0xFFFF;
+
+    // Fertile Soil applies supercompost. With the ash covered tome unlock, two volcanic ash
+    // are consumed to upgrade the cast to ultracompost.
+    public static final int FERTILE_SOIL_EARTH_RUNE_COUNT = 15;
+    public static final int FERTILE_SOIL_NATURE_RUNE_COUNT = 2;
+    public static final int FERTILE_SOIL_ASTRAL_RUNE_COUNT = 3;
+    public static final int FERTILE_SOIL_VOLCANIC_ASH_COUNT = 2;
+    public static final int SPELLBOOK_SWAP_ASTRAL_RUNE_COUNT = 3;
+    public static final int SPELLBOOK_SWAP_COSMIC_RUNE_COUNT = 2;
+    public static final int SPELLBOOK_SWAP_LAW_RUNE_COUNT = 1;
 
     public static boolean isKastoriRegion(int regionId) {
         return regionId == REGION_KASTORI

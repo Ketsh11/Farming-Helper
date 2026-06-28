@@ -6,6 +6,7 @@ import com.easyfarming.overlays.highlighting.*;
 import com.easyfarming.overlays.utils.ColorProvider;
 import com.easyfarming.overlays.utils.PatchStateChecker;
 import com.easyfarming.utils.Constants;
+import com.easyfarming.utils.FertileSoilHelper;
 import net.runelite.api.Client;
 import net.runelite.api.GameObject;
 import net.runelite.api.ObjectComposition;
@@ -79,6 +80,13 @@ public class FarmingStepHandler {
         this.colorProvider = colorProvider;
         this.farmingHelperOverlay = farmingHelperOverlay;
         this.gameObjectHighlighter = gameObjectHighlighter;
+    }
+
+    private String compostInstruction(String patchDescription) {
+        if (FertileSoilHelper.usesFertileSoil(config)) {
+            return "Cast Fertile Soil on " + patchDescription + ".";
+        }
+        return "Use Compost on " + patchDescription + ".";
     }
     
     /**
@@ -209,7 +217,7 @@ public class FarmingStepHandler {
                         return;
                     }
                     // Patch is GROWING but not composted yet - show compost instruction
-                    plugin.addTextToInfoBox("Use Compost on patch.");
+                    plugin.addTextToInfoBox(compostInstruction("patch"));
                     Integer compostId = itemHighlighter.selectedCompostID();
                     // If compost is not in inventory, set hint arrow to Tool Leprechaun
                     if (compostId != null && !itemHighlighter.isItemInInventory(compostId)) {
@@ -340,7 +348,7 @@ public class FarmingStepHandler {
                             return;
                         }
                         // Patch is GROWING but not composted yet - show compost instruction
-                        plugin.addTextToInfoBox("Use Compost on patch.");
+                        plugin.addTextToInfoBox(compostInstruction("patch"));
                         patchHighlighter.highlightSpecificHopsPatch(graphics, patchObjectId, useItemColor);
                         Integer compostId = itemHighlighter.selectedCompostID();
                         // If compost is not in inventory, set hint arrow to Tool Leprechaun
@@ -498,7 +506,7 @@ public class FarmingStepHandler {
                             return;
                         }
                         // Patch is GROWING but not composted yet - show compost instruction
-                        plugin.addTextToInfoBox("Use Compost on patch.");
+                        plugin.addTextToInfoBox(compostInstruction("patch"));
                         patchHighlighter.highlightSpecificFlowerPatch(graphics, patchObjectId, useItemColor);
                         compostHighlighter.highlightCompost(graphics, false, false, false, 2);
                         break;
@@ -853,7 +861,7 @@ public class FarmingStepHandler {
                         return;
                     }
                     // Patch is GROWING but not composted yet - show compost instruction
-                    plugin.addTextToInfoBox("Use Compost on north patch.");
+                    plugin.addTextToInfoBox(compostInstruction("north patch"));
                     patchHighlighter.highlightSpecificAllotmentPatch(graphics, patchObjectId, useItemColor);
                     Integer compostId = itemHighlighter.selectedCompostID();
                     if (compostId != null && itemHighlighter.isItemInInventory(compostId)) {
@@ -1014,7 +1022,7 @@ public class FarmingStepHandler {
                         return; // Don't show compost instruction if already composted
                     }
                     // Patch is GROWING but not composted yet - show compost instruction
-                    plugin.addTextToInfoBox("Use Compost on south patch.");
+                    plugin.addTextToInfoBox(compostInstruction("south patch"));
                     patchHighlighter.highlightSpecificAllotmentPatch(graphics, patchObjectId, useItemColor);
                     Integer compostId = itemHighlighter.selectedCompostID();
                     if (compostId != null && itemHighlighter.isItemInInventory(compostId)) {
@@ -1138,7 +1146,7 @@ public class FarmingStepHandler {
                             return;
                         }
                         // Patch is GROWING but not composted yet - show compost instruction
-                        plugin.addTextToInfoBox("Use Compost on patch.");
+                        plugin.addTextToInfoBox(compostInstruction("patch"));
                         Integer compostId = itemHighlighter.selectedCompostID();
                         // If compost is not in inventory, set hint arrow to Tool Leprechaun
                         if (compostId != null && !itemHighlighter.isItemInInventory(compostId)) {
@@ -1283,7 +1291,7 @@ public class FarmingStepHandler {
                             return;
                         }
                         // Patch is GROWING but not composted yet - show compost instruction
-                        plugin.addTextToInfoBox("Use Compost on patch.");
+                        plugin.addTextToInfoBox(compostInstruction("patch"));
                         Integer compostId = itemHighlighter.selectedCompostID();
                         // If compost is not in inventory, set hint arrow to Tool Leprechaun
                         if (compostId != null && !itemHighlighter.isItemInInventory(compostId)) {

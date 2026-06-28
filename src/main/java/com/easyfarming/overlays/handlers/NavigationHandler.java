@@ -8,6 +8,7 @@ import com.easyfarming.overlays.utils.ColorProvider;
 import com.easyfarming.overlays.utils.GameObjectHelper;
 import com.easyfarming.overlays.utils.WidgetHelper;
 import com.easyfarming.utils.Constants;
+import com.easyfarming.utils.FertileSoilHelper;
 import net.runelite.api.Client;
 import net.runelite.api.Player;
 import net.runelite.api.coords.WorldPoint;
@@ -83,7 +84,7 @@ public class NavigationHandler {
      * Handles navigation to player's house.
      */
     public void gettingToHouse(Graphics2D graphics) {
-        EasyFarmingConfig.OptionEnumHouseTele teleportOption = config.enumConfigHouseTele();
+        EasyFarmingConfig.OptionEnumHouseTele teleportOption = FertileSoilHelper.effectiveHouseTeleport(config);
         Color leftColor = colorProvider.getLeftClickColorWithAlpha();
         Color rightColor = colorProvider.getRightClickColorWithAlpha();
         
@@ -98,8 +99,13 @@ public class NavigationHandler {
                         widgetHighlighter.interfaceOverlay(widgetHelper.getSpellbookIconGroupId(), widgetHelper.getSpellbookIconChildId()).render(graphics);
                         break;
                     case SPELLBOOK:
-                        // Highlight the "Teleport to House" spell using correct child ID from widget inspector
-                        widgetHighlighter.interfaceOverlay(InterfaceID.MAGIC_SPELLBOOK, Constants.SPELL_CHILD_TELEPORT_TO_HOUSE).render(graphics);
+                        if (FertileSoilHelper.useSpellbookSwap(config)
+                                && !widgetHelper.isInterfaceOpen(InterfaceID.MAGIC_SPELLBOOK, Constants.SPELL_CHILD_TELEPORT_TO_HOUSE)) {
+                            widgetHighlighter.interfaceOverlay(InterfaceID.MAGIC_SPELLBOOK, Constants.SPELL_CHILD_SPELLBOOK_SWAP).render(graphics);
+                        } else {
+                            // Highlight the "Teleport to House" spell using correct child ID from widget inspector
+                            widgetHighlighter.interfaceOverlay(InterfaceID.MAGIC_SPELLBOOK, Constants.SPELL_CHILD_TELEPORT_TO_HOUSE).render(graphics);
+                        }
                         inHouseCheck();
                         break;
                 }
@@ -568,7 +574,12 @@ public class NavigationHandler {
                 }
                 break;
             case SPELLBOOK:
-                widgetHighlighter.interfaceOverlay(teleport.getInterfaceGroupId(), teleport.getInterfaceChildId()).render(graphics);
+                if (FertileSoilHelper.useSpellbookSwap(config)
+                        && !widgetHelper.isInterfaceOpen(teleport.getInterfaceGroupId(), teleport.getInterfaceChildId())) {
+                    widgetHighlighter.interfaceOverlay(InterfaceID.MAGIC_SPELLBOOK, Constants.SPELL_CHILD_SPELLBOOK_SWAP).render(graphics);
+                } else {
+                    widgetHighlighter.interfaceOverlay(teleport.getInterfaceGroupId(), teleport.getInterfaceChildId()).render(graphics);
+                }
                 if (currentRegionId == teleport.getRegionId()) {
                     this.currentTeleportCase = 1;
                     isAtDestination = true;
