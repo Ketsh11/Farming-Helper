@@ -124,10 +124,19 @@ public interface EasyFarmingConfig extends Config
 	default OptionEnumFertileSoilTeleportMode fertileSoilTeleportMode() { return OptionEnumFertileSoilTeleportMode.Avoid_standard_spellbook_teleports; }
 
 	@ConfigItem(
+			position = 7,
+			keyName = "useHerbSack",
+			name = "Use herb sack",
+			description = "Require a herb sack or silklined herb sack for herb runs",
+			section = generalList
+	)
+	default boolean useHerbSack() { return false; }
+
+	@ConfigItem(
 		keyName = "booleanConfigPayForProtection",
 		name = "Pay for protection",
 		description = "Want a reminder to pay for protection? (This currently doesn't check for the required items, only prompts you to pay the farmer.)",
-		position = 7,
+		position = 8,
 		section = generalList
 	)
 	default boolean generalPayForProtection() { return false; }

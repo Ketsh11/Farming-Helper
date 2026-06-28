@@ -125,6 +125,9 @@ public final class CustomRunItemRequirements {
 
         if (herbPatchCount > 0) {
             allRequirements.merge(ItemID.GUAM_SEED, herbPatchCount, Integer::sum);
+            if (config != null && config.useHerbSack()) {
+                allRequirements.merge(Constants.BASE_HERB_SACK_ID, 1, Integer::sum);
+            }
         }
         if (flowerPatchCount > 0) {
             allRequirements.merge(ItemID.LIMPWURT_SEED, flowerPatchCount, Integer::sum);

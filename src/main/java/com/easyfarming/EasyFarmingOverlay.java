@@ -913,6 +913,8 @@ public class EasyFarmingOverlay extends Overlay {
                 } else if (itemId == ItemID.PENDANT_OF_ATES) {
                     boolean hasPendant = inventoryItemCounts.getOrDefault(ItemID.PENDANT_OF_ATES, 0) > 0;
                     inventoryCount = hasPendant ? count : 0;
+                } else if (itemId == Constants.BASE_HERB_SACK_ID) {
+                    inventoryCount = hasAnyItem(inventoryItemCounts, Constants.ANY_HERB_SACK_IDS) ? 1 : 0;
                 }
 
                 // Rune pouch contents are already included in inventoryItemCounts
@@ -1071,6 +1073,7 @@ public class EasyFarmingOverlay extends Overlay {
                 itemId == ItemID.RAKE ||
                 itemId == ItemID.DIBBER ||
                 itemId == ItemID.FAIRY_ENCHANTED_SECATEURS ||
+                itemId == Constants.BASE_HERB_SACK_ID ||
                 isWateringCan(itemId);
     }
 
@@ -1126,6 +1129,15 @@ public class EasyFarmingOverlay extends Overlay {
 
         // Everything else (runes, teleport items, tools, etc.) is considered a teleport
         // item
+        return false;
+    }
+
+    private boolean hasAnyItem(Map<Integer, Integer> itemCounts, List<Integer> itemIds) {
+        for (int itemId : itemIds) {
+            if (itemCounts.getOrDefault(itemId, 0) > 0) {
+                return true;
+            }
+        }
         return false;
     }
 }

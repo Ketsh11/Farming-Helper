@@ -432,9 +432,27 @@ public class Constants {
     public static final int BASE_SKILLS_NECKLACE_ID = ItemID.JEWL_NECKLACE_OF_SKILLS_1;
     public static final int BASE_NECKLACE_OF_PASSAGE_ID = ItemID.NECKLACE_OF_PASSAGE_5;
     public static final int BASE_HERB_SEED_ID = ItemID.GUAM_SEED;
+    public static final int BASE_HERB_SACK_ID = ItemID.SLAYER_HERB_SACK;
     public static final int BASE_TREE_SAPLING_ID = ItemID.PLANTPOT_OAK_SAPLING;
     public static final int BASE_FRUIT_TREE_SAPLING_ID = ItemID.PLANTPOT_APPLE_SAPLING;
     public static final int BASE_ALLOTMENT_SEED_ID = ItemID.SNAPE_GRASS_SEED;
+
+    public static final List<Integer> HERB_SACK_IDS = Collections.unmodifiableList(Arrays.asList(
+        ItemID.SLAYER_HERB_SACK,
+        ItemID.SLAYER_HERB_SACK_OPEN
+    ));
+
+    public static final List<Integer> SILKLINED_HERB_SACK_IDS = Collections.unmodifiableList(Arrays.asList(
+        ItemID.SLAYER_HERB_SACK_SILK,
+        ItemID.SLAYER_HERB_SACK_SILK_OPEN
+    ));
+
+    public static final List<Integer> ANY_HERB_SACK_IDS = Collections.unmodifiableList(Arrays.asList(
+        ItemID.SLAYER_HERB_SACK,
+        ItemID.SLAYER_HERB_SACK_OPEN,
+        ItemID.SLAYER_HERB_SACK_SILK,
+        ItemID.SLAYER_HERB_SACK_SILK_OPEN
+    ));
     
     // Combination rune mapping
     public static final Map<Integer, List<Integer>> COMBINATION_RUNE_SUBRUNES_MAP;
