@@ -5,6 +5,7 @@ import com.easyfarming.overlays.utils.ColorProvider;
 import com.easyfarming.overlays.utils.PatchStateChecker;
 import com.easyfarming.overlays.utils.WidgetHelper;
 import com.easyfarming.utils.Constants;
+import com.easyfarming.utils.FertileSoilHelper;
 import net.runelite.api.Client;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.ItemID;
@@ -130,6 +131,13 @@ public class CompostHighlighter {
 
     private void highlightFertileSoilCast(Graphics2D graphics) {
         Color color = colorProvider.getHighlightUseItemWithAlpha();
+        if (FertileSoilHelper.needsLunarSpellbook(client, config)) {
+            widgetHighlighter.interfaceOverlay(
+                    widgetHelper.getSpellbookIconGroupId(),
+                    widgetHelper.getSpellbookIconChildId()).render(graphics);
+            return;
+        }
+
         if (itemHighlighter.selectedCompostUsesVolcanicAsh()) {
             itemHighlighter.itemHighlight(graphics, ItemID.FOSSIL_VOLCANIC_ASH, color);
         }

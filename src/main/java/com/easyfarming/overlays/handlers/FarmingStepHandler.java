@@ -90,6 +90,9 @@ public class FarmingStepHandler {
 
     private String compostInstruction(String patchDescription) {
         if (FertileSoilHelper.usesFertileSoil(config)) {
+            if (FertileSoilHelper.needsLunarSpellbook(client, config)) {
+                return FertileSoilHelper.SWITCH_TO_LUNAR_SPELLBOOK_INSTRUCTION;
+            }
             return "Cast Fertile Soil on " + patchDescription + ".";
         }
         return "Use Compost on " + patchDescription + ".";

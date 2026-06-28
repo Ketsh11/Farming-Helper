@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import com.easyfarming.customrun.CustomRunItemRequirements;
 import com.easyfarming.utils.Constants;
+import com.easyfarming.utils.FertileSoilHelper;
 
 public class EasyFarmingOverlay extends Overlay {
 
@@ -614,7 +615,10 @@ public class EasyFarmingOverlay extends Overlay {
         }
 
         if (!plugin.areItemsCollected()) {
-            plugin.addTextToInfoBox("Grab all the items needed");
+            boolean needsLunarSpellbook = FertileSoilHelper.needsLunarSpellbook(client, plugin.getConfig());
+            plugin.addTextToInfoBox(needsLunarSpellbook
+                    ? FertileSoilHelper.SWITCH_TO_LUNAR_SPELLBOOK_INSTRUCTION
+                    : "Grab all the items needed");
             // List of items to check
             Map<Integer, Integer> itemsToCheck = null;
             if (plugin.getFarmingTeleportOverlay().isCustomRunMode()
@@ -944,7 +948,7 @@ public class EasyFarmingOverlay extends Overlay {
                 return Integer.compare(priority1, priority2);
             });
 
-            plugin.setTeleportOverlayActive(allItemsCollected);
+            plugin.setTeleportOverlayActive(allItemsCollected && !needsLunarSpellbook);
 
             // Update InfoBoxes - remove ones that are no longer needed, add/update ones
             // that are
@@ -1010,7 +1014,7 @@ public class EasyFarmingOverlay extends Overlay {
             }
 
             // Check if all items have been collected
-            if (missingItemsWithCounts.isEmpty()) {
+            if (missingItemsWithCounts.isEmpty() && !needsLunarSpellbook) {
                 plugin.setItemsCollected(true);
             } else {
                 plugin.setItemsCollected(false);

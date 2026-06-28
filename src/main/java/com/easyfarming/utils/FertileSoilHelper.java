@@ -1,11 +1,16 @@
 package com.easyfarming.utils;
 
 import com.easyfarming.EasyFarmingConfig;
+import net.runelite.api.Client;
 import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.VarbitID;
 
 import java.util.Map;
 
 public final class FertileSoilHelper {
+    private static final int LUNAR_SPELLBOOK = 2;
+    public static final String SWITCH_TO_LUNAR_SPELLBOOK_INSTRUCTION = "Switch to the Lunar spellbook.";
+
     private FertileSoilHelper() {}
 
     public static boolean usesFertileSoil(EasyFarmingConfig config) {
@@ -29,6 +34,14 @@ public final class FertileSoilHelper {
 
     public static boolean avoidStandardSpellbookTeleports(EasyFarmingConfig config) {
         return usesFertileSoil(config) && !useSpellbookSwap(config);
+    }
+
+    public static boolean isOnLunarSpellbook(Client client) {
+        return client != null && client.getVarbitValue(VarbitID.SPELLBOOK) == LUNAR_SPELLBOOK;
+    }
+
+    public static boolean needsLunarSpellbook(Client client, EasyFarmingConfig config) {
+        return usesFertileSoil(config) && !isOnLunarSpellbook(client);
     }
 
     public static EasyFarmingConfig.OptionEnumHouseTele effectiveHouseTeleport(EasyFarmingConfig config) {
