@@ -238,34 +238,46 @@ public class ItemHighlighter {
     
     /**
      * Highlights allotment seeds in inventory.
+     * Also highlights the Seed Box (seeds can be planted directly from it).
      */
     public void highlightAllotmentSeeds(Graphics2D graphics) {
         Color useItemColor = colorProvider.getHighlightUseItemWithAlpha();
         highlightInventorySlotsWithIds(graphics, farmingHelperOverlay.getAllotmentSeedIds(), useItemColor);
+        highlightSeedBox(graphics, useItemColor);
     }
 
     /**
      * Highlights herb seeds in inventory.
+     * Also highlights the Seed Box (seeds can be planted directly from it).
      */
     public void highlightHerbSeeds(Graphics2D graphics) {
         Color color = colorProvider.getHighlightUseItemWithAlpha();
         highlightInventorySlotsWithIds(graphics, farmingHelperOverlay.getHerbSeedIds(), color);
+        highlightSeedBox(graphics, color);
     }
 
     /**
      * Highlights hops seeds in inventory.
+     * Also highlights the Seed Box (seeds can be planted directly from it).
      */
     public void highlightHopsSeeds(Graphics2D graphics) {
         Color color = colorProvider.getHighlightUseItemWithAlpha();
         highlightInventorySlotsWithIds(graphics, farmingHelperOverlay.getHopsSeedIds(), color);
+        highlightSeedBox(graphics, color);
     }
 
     /**
      * Highlights flower seeds in inventory (limpwurt, white lily, etc.).
+     * Also highlights the Seed Box (seeds can be planted directly from it).
      */
     public void highlightFlowerSeeds(Graphics2D graphics) {
         Color color = colorProvider.getHighlightUseItemWithAlpha();
         highlightInventorySlotsWithIds(graphics, farmingHelperOverlay.getFlowerSeedIds(), color);
+        highlightSeedBox(graphics, color);
+    }
+
+    private void highlightSeedBox(Graphics2D graphics, Color color) {
+        highlightInventorySlotsWithIds(graphics, farmingHelperOverlay.getSeedBoxIds(), color);
     }
 
     /**

@@ -381,6 +381,11 @@ public class Constants {
         VarbitID.RUNE_POUCH_TYPE_1, VarbitID.RUNE_POUCH_TYPE_2,
         VarbitID.RUNE_POUCH_TYPE_3, VarbitID.RUNE_POUCH_TYPE_4
     ));
+
+    /** Closed and open Seed Box item IDs (Tithe Farm reward). Not ItemID.SEEDBOX (seed pack). */
+    public static final List<Integer> SEED_BOX_IDS = Collections.unmodifiableList(Arrays.asList(
+        ItemID.SEED_BOX, ItemID.SEED_BOX_OPEN
+    ));
     
     public static final List<Integer> SPIRIT_TREE_IDS = Collections.unmodifiableList(Arrays.asList(
         1293, 1294, 1295, 8355, 29227, 29229, 37329, 40778
@@ -487,6 +492,10 @@ public class Constants {
 
     public static boolean isFlowerSeed(int itemId) {
         return FLOWER_SEED_IDS.contains(itemId);
+    }
+
+    public static boolean isSeedBox(int itemId) {
+        return SEED_BOX_IDS.contains(itemId);
     }
     
     public static boolean isQuetzalWhistle(int itemId) {
