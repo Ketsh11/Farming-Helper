@@ -101,6 +101,18 @@ public class EasyFarmingOverlay extends Overlay {
         return ARDY_CLOAK_IDS.contains(itemId);
     }
 
+    public static final List<Integer> FARMING_CAPE_IDS = Arrays.asList(ItemID.SKILLCAPE_FARMING,
+            ItemID.SKILLCAPE_FARMING_TRIMMED);
+    private static final int BASE_FARMING_CAPE_ID = ItemID.SKILLCAPE_FARMING;
+
+    public List<Integer> getFarmingCapeIds() {
+        return FARMING_CAPE_IDS;
+    }
+
+    public boolean isFarmingCape(int itemId) {
+        return FARMING_CAPE_IDS.contains(itemId);
+    }
+
     public static final List<Integer> WATERING_CAN_IDS = Constants.WATERING_CAN_IDS;
     private static final int BASE_WATERING_CAN_ID = Constants.WATERING_CAN_IDS.get(0);
 
@@ -896,6 +908,17 @@ public class EasyFarmingOverlay extends Overlay {
                         }
                     }
                     inventoryCount = hasArdyCloak ? 1 : 0;
+                } else if (itemId == BASE_FARMING_CAPE_ID) {
+                    // Check if any Farming cape variant (untrimmed or trimmed) is equipped or in inventory
+                    // inventoryItemCounts already includes equipped items from the third pass
+                    boolean hasFarmingCape = false;
+                    for (int capeId : FARMING_CAPE_IDS) {
+                        if (inventoryItemCounts.containsKey(capeId) && inventoryItemCounts.get(capeId) > 0) {
+                            hasFarmingCape = true;
+                            break;
+                        }
+                    }
+                    inventoryCount = hasFarmingCape ? 1 : 0;
                 } else if (itemId == BASE_WATERING_CAN_ID) {
                     // Check if any watering can variant is equipped or in inventory
                     // inventoryItemCounts already includes equipped items from the third pass

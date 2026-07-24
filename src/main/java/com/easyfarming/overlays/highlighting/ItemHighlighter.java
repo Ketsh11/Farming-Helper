@@ -165,6 +165,7 @@ public class ItemHighlighter {
         return isQuetzalWhistleHighlight(itemId, targetId)
                 || isExplorersRingHighlight(itemId, targetId)
                 || isArdyCloakHighlight(itemId, targetId)
+                || isFarmingCapeHighlight(itemId, targetId)
                 || isSkillsNecklaceHighlight(itemId, targetId)
                 || isNecklaceOfPassageHighlight(itemId, targetId)
                 || isBottomlessBucketHighlight(itemId, targetId)
@@ -199,6 +200,13 @@ public class ItemHighlighter {
         return farmingHelperOverlay.isArdyCloak(itemId) && farmingHelperOverlay.isArdyCloak(targetId);
     }
     
+    /**
+     * Checks if an item ID matches a Farming cape highlight pattern (untrimmed or trimmed).
+     */
+    private boolean isFarmingCapeHighlight(int itemId, int targetId) {
+        return farmingHelperOverlay.isFarmingCape(itemId) && farmingHelperOverlay.isFarmingCape(targetId);
+    }
+
     /**
      * Checks if an item ID matches a Skills Necklace highlight pattern.
      */
