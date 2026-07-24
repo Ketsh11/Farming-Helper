@@ -285,7 +285,9 @@ public class EasyFarmingOverlay extends Overlay {
         return FRUIT_TREE_SAPLING_IDS.contains(itemId);
     }
 
-    public static final List<Integer> RUNE_POUCH_ID = Arrays.asList(ItemID.BH_RUNE_POUCH, ItemID.DIVINE_RUNE_POUCH);
+    public static final List<Integer> RUNE_POUCH_ID = Arrays.asList(
+            ItemID.BH_RUNE_POUCH, ItemID.BH_RUNE_POUCH_TROUVER,
+            ItemID.DIVINE_RUNE_POUCH, ItemID.DIVINE_RUNE_POUCH_TROUVER);
 
     public static final List<Integer> RUNE_POUCH_AMOUNT_VARBITS = Arrays.asList(VarbitID.RUNE_POUCH_QUANTITY_1,
             VarbitID.RUNE_POUCH_QUANTITY_2, VarbitID.RUNE_POUCH_QUANTITY_3, VarbitID.RUNE_POUCH_QUANTITY_4);

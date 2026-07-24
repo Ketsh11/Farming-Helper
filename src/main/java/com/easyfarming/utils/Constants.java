@@ -368,7 +368,8 @@ public class Constants {
     ));
     
     public static final List<Integer> RUNE_POUCH_IDS = Collections.unmodifiableList(Arrays.asList(
-        ItemID.BH_RUNE_POUCH, ItemID.DIVINE_RUNE_POUCH
+        ItemID.BH_RUNE_POUCH, ItemID.BH_RUNE_POUCH_TROUVER,
+        ItemID.DIVINE_RUNE_POUCH, ItemID.DIVINE_RUNE_POUCH_TROUVER
     ));
     
     public static final List<Integer> RUNE_POUCH_AMOUNT_VARBITS = Collections.unmodifiableList(Arrays.asList(
