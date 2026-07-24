@@ -460,7 +460,8 @@ public class EasyFarmingOverlay extends Overlay {
         // Twinflame Staff (Fire + Water)
         staffMap.put(ItemID.TWINFLAME_STAFF, Arrays.asList(ItemID.FIRERUNE, ItemID.WATERRUNE));
 
-        // Tome of Earth (Earth) — charged variant provides runes in this mapping
+        // Tomes — charged variants only (empty/uncharged do not provide runes)
+        staffMap.put(ItemID.TOME_OF_FIRE, Arrays.asList(ItemID.FIRERUNE));
         staffMap.put(ItemID.TOME_OF_EARTH, Arrays.asList(ItemID.EARTHRUNE));
 
         STAFF_RUNES_MAP = Collections.unmodifiableMap(staffMap);
