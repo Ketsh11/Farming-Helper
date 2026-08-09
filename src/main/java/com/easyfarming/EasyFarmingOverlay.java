@@ -1,16 +1,20 @@
 package com.easyfarming;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.util.*;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
 
 import net.runelite.api.*;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarbitID;
+import net.runelite.api.widgets.Widget;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -100,6 +104,18 @@ public class EasyFarmingOverlay extends Overlay {
 
     public boolean isArdyCloak(int itemId) {
         return ARDY_CLOAK_IDS.contains(itemId);
+    }
+
+    public static final List<Integer> FARMING_CAPE_IDS = Arrays.asList(ItemID.SKILLCAPE_FARMING,
+            ItemID.SKILLCAPE_FARMING_TRIMMED);
+    private static final int BASE_FARMING_CAPE_ID = ItemID.SKILLCAPE_FARMING;
+
+    public List<Integer> getFarmingCapeIds() {
+        return FARMING_CAPE_IDS;
+    }
+
+    public boolean isFarmingCape(int itemId) {
+        return FARMING_CAPE_IDS.contains(itemId);
     }
 
     public static final List<Integer> WATERING_CAN_IDS = Constants.WATERING_CAN_IDS;
@@ -274,13 +290,110 @@ public class EasyFarmingOverlay extends Overlay {
         return FRUIT_TREE_SAPLING_IDS.contains(itemId);
     }
 
-    public static final List<Integer> RUNE_POUCH_ID = Arrays.asList(ItemID.BH_RUNE_POUCH, ItemID.DIVINE_RUNE_POUCH);
+    public static final List<Integer> RUNE_POUCH_ID = Arrays.asList(
+            ItemID.BH_RUNE_POUCH, ItemID.BH_RUNE_POUCH_TROUVER,
+            ItemID.DIVINE_RUNE_POUCH, ItemID.DIVINE_RUNE_POUCH_TROUVER);
 
     public static final List<Integer> RUNE_POUCH_AMOUNT_VARBITS = Arrays.asList(VarbitID.RUNE_POUCH_QUANTITY_1,
             VarbitID.RUNE_POUCH_QUANTITY_2, VarbitID.RUNE_POUCH_QUANTITY_3, VarbitID.RUNE_POUCH_QUANTITY_4);
 
     public static final List<Integer> RUNE_POUCH_RUNE_VARBITS = Arrays.asList(VarbitID.RUNE_POUCH_TYPE_1,
             VarbitID.RUNE_POUCH_TYPE_2, VarbitID.RUNE_POUCH_TYPE_3, VarbitID.RUNE_POUCH_TYPE_4);
+
+    public static final List<Integer> SEED_BOX_IDS = Constants.SEED_BOX_IDS;
+
+    public List<Integer> getSeedBoxIds() {
+        return SEED_BOX_IDS;
+    }
+
+    public boolean isSeedBox(int itemId) {
+        return Constants.isSeedBox(itemId);
+    }
+
+    /**
+     * True once the client has received the Seed Box item container this session.
+     * {@link Client#getItemContainer(int)} is {@code @Nullable}: null means contents are unknown
+     * (not the same as a known-empty box, which returns a non-null container).
+     */
+    private boolean isSeedBoxContentsKnown() {
+        return client.getItemContainer(InventoryID.SEED_BOX) != null;
+    }
+
+    /**
+     * Seeds stored in the Seed Box ({@link InventoryID#SEED_BOX}).
+     * Returns an empty array when the container has not been received yet (unknown) or has no items.
+     */
+    private Item[] getSeedBoxItems() {
+        ItemContainer seedBox = client.getItemContainer(InventoryID.SEED_BOX);
+        if (seedBox == null || seedBox.getItems() == null) {
+            return new Item[0];
+        }
+        return seedBox.getItems();
+    }
+
+    private boolean inventoryContainsSeedBox(Item[] items) {
+        for (Item item : items) {
+            if (item != null && isSeedBox(item.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Aggregate / specific seed IDs used as custom-run requirements (not saplings). */
+    private boolean isSeedRequirementItemId(int itemId) {
+        return itemId == BASE_SEED_ID
+                || itemId == ItemID.LIMPWURT_SEED
+                || itemId == BASE_ALLOTMENT_SEED_ID
+                || itemId == BASE_HOPS_SEED_ID
+                || isHerbSeed(itemId)
+                || isFlowerSeed(itemId)
+                || isAllotmentSeed(itemId)
+                || isHopsSeed(itemId);
+    }
+
+    /** Highlights Seed Box inventory slots (Check action) using the use-item highlight color. */
+    private void highlightSeedBoxInInventory(Graphics2D graphics, Item[] items) {
+        EasyFarmingConfig config = plugin.getConfig();
+        if (config == null) {
+            return;
+        }
+        Color color = new Color(
+                config.highlightUseItemColor().getRed(),
+                config.highlightUseItemColor().getGreen(),
+                config.highlightUseItemColor().getBlue(),
+                config.highlightAlpha());
+        Widget inventoryWidget = client.getWidget(InterfaceID.INVENTORY);
+        if (inventoryWidget == null) {
+            inventoryWidget = client.getWidget(149, 0);
+        }
+        if (inventoryWidget == null) {
+            return;
+        }
+        Widget[] children = inventoryWidget.getChildren();
+        Widget[] dynamicChildren = inventoryWidget.getDynamicChildren();
+        Widget[] childrenToUse = (dynamicChildren != null && dynamicChildren.length > 0) ? dynamicChildren : children;
+        if (childrenToUse == null) {
+            return;
+        }
+        for (int i = 0; i < items.length && i < childrenToUse.length; i++) {
+            Item item = items[i];
+            if (item == null || !isSeedBox(item.getId())) {
+                continue;
+            }
+            Widget itemWidget = childrenToUse[i];
+            if (itemWidget == null) {
+                continue;
+            }
+            Rectangle bounds = itemWidget.getBounds();
+            if (bounds != null && bounds.width > 0 && bounds.height > 0) {
+                graphics.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 100));
+                graphics.fill(bounds);
+                graphics.setColor(color);
+                graphics.draw(bounds);
+            }
+        }
+    }
 
     private static final Map<Integer, List<Integer>> COMBINATION_RUNE_SUBRUNES_MAP;
 
@@ -348,7 +461,8 @@ public class EasyFarmingOverlay extends Overlay {
         // Twinflame Staff (Fire + Water)
         staffMap.put(ItemID.TWINFLAME_STAFF, Arrays.asList(ItemID.FIRERUNE, ItemID.WATERRUNE));
 
-        // Tome of Earth (Earth) — charged variant provides runes in this mapping
+        // Tomes — charged variants only (empty/uncharged do not provide runes)
+        staffMap.put(ItemID.TOME_OF_FIRE, Arrays.asList(ItemID.FIRERUNE));
         staffMap.put(ItemID.TOME_OF_EARTH, Arrays.asList(ItemID.EARTHRUNE));
 
         STAFF_RUNES_MAP = Collections.unmodifiableMap(staffMap);
@@ -616,9 +730,6 @@ public class EasyFarmingOverlay extends Overlay {
 
         if (!plugin.areItemsCollected()) {
             boolean needsLunarSpellbook = FertileSoilHelper.needsLunarSpellbook(client, plugin.getConfig());
-            plugin.addTextToInfoBox(needsLunarSpellbook
-                    ? FertileSoilHelper.SWITCH_TO_LUNAR_SPELLBOOK_INSTRUCTION
-                    : "Grab all the items needed");
             // List of items to check
             Map<Integer, Integer> itemsToCheck = null;
             if (plugin.getFarmingTeleportOverlay().isCustomRunMode()
@@ -709,8 +820,25 @@ public class EasyFarmingOverlay extends Overlay {
             int totalHopsSeeds = 0;
             int totalFlowerSeeds = 0;
             boolean customRun = plugin.getFarmingTeleportOverlay().isCustomRunMode();
+            // First-class Seed Box state: null container = unknown; non-null = known (possibly empty).
+            boolean seedBoxContentsUnknown = inventoryContainsSeedBox(items) && !isSeedBoxContentsKnown();
+            Item[] seedBoxItems = getSeedBoxItems();
             if (customRun) {
                 for (Item item : items) {
+                    if (isHerbSeed(item.getId())) {
+                        totalSeeds += item.getQuantity();
+                    }
+                    if (isAllotmentSeed(item.getId())) {
+                        totalAllotmentSeeds += item.getQuantity();
+                    }
+                    if (isFlowerSeed(item.getId())) {
+                        totalFlowerSeeds += item.getQuantity();
+                    }
+                }
+                for (Item item : seedBoxItems) {
+                    if (item == null) {
+                        continue;
+                    }
                     if (isHerbSeed(item.getId())) {
                         totalSeeds += item.getQuantity();
                     }
@@ -739,6 +867,11 @@ public class EasyFarmingOverlay extends Overlay {
             if (customRun) {
                 for (Item item : items) {
                     if (isHopsSeed(item.getId())) {
+                        totalHopsSeeds += item.getQuantity();
+                    }
+                }
+                for (Item item : seedBoxItems) {
+                    if (item != null && isHopsSeed(item.getId())) {
                         totalHopsSeeds += item.getQuantity();
                     }
                 }
@@ -795,6 +928,17 @@ public class EasyFarmingOverlay extends Overlay {
                 }
             }
 
+            // Seed box contents (InventoryID.SEED_BOX) count toward seed requirements
+            for (Item seedBoxItem : seedBoxItems) {
+                if (seedBoxItem == null || seedBoxItem.getId() < 0) {
+                    continue;
+                }
+                int seedBoxItemId = seedBoxItem.getId();
+                int seedBoxQty = seedBoxItem.getQuantity();
+                inventoryItemCounts.put(seedBoxItemId,
+                        inventoryItemCounts.getOrDefault(seedBoxItemId, 0) + seedBoxQty);
+            }
+
             // Third pass: add equipped items to inventory counts
             // Note: equippedItems was already retrieved above for skills necklace charges
             for (Map.Entry<Integer, Integer> equippedEntry : equippedItems.entrySet()) {
@@ -819,6 +963,7 @@ public class EasyFarmingOverlay extends Overlay {
 
             List<AbstractMap.SimpleEntry<Integer, Integer>> missingItemsWithCounts = new ArrayList<>();
             boolean allItemsCollected = true;
+            boolean unmetSeedRequirement = false;
             for (Map.Entry<Integer, Integer> entry : itemsToCheck.entrySet()) {
                 int itemId = entry.getKey();
                 int count = entry.getValue();
@@ -900,6 +1045,17 @@ public class EasyFarmingOverlay extends Overlay {
                         }
                     }
                     inventoryCount = hasArdyCloak ? 1 : 0;
+                } else if (itemId == BASE_FARMING_CAPE_ID) {
+                    // Check if any Farming cape variant (untrimmed or trimmed) is equipped or in inventory
+                    // inventoryItemCounts already includes equipped items from the third pass
+                    boolean hasFarmingCape = false;
+                    for (int capeId : FARMING_CAPE_IDS) {
+                        if (inventoryItemCounts.containsKey(capeId) && inventoryItemCounts.get(capeId) > 0) {
+                            hasFarmingCape = true;
+                            break;
+                        }
+                    }
+                    inventoryCount = hasFarmingCape ? 1 : 0;
                 } else if (itemId == BASE_WATERING_CAN_ID) {
                     // Check if any watering can variant is equipped or in inventory
                     // inventoryItemCounts already includes equipped items from the third pass
@@ -922,9 +1078,18 @@ public class EasyFarmingOverlay extends Overlay {
                 }
 
                 // Rune pouch contents are already included in inventoryItemCounts
+                // Seed box contents are already included in inventoryItemCounts / seed totals
+                // (when unknown, getSeedBoxItems() is empty so totals are inventory-only)
 
                 if (inventoryCount < count) {
                     allItemsCollected = false;
+                    if (isSeedRequirementItemId(itemId)) {
+                        unmetSeedRequirement = true;
+                        // Contents may be in the Seed Box — defer seed missing-UI until known.
+                        if (seedBoxContentsUnknown) {
+                            continue;
+                        }
+                    }
                     int missingCount = count - inventoryCount;
                     BufferedImage itemImage = itemManager.getImage(itemId);
                     if (itemImage != null) {
@@ -932,6 +1097,19 @@ public class EasyFarmingOverlay extends Overlay {
                         missingItemsWithCounts.add(new AbstractMap.SimpleEntry<>(itemId, missingCount));
                     }
                 }
+            }
+
+            // Prompt Check only when the box is present/unknown AND the requirement pass
+            // already found unmet seed requirements (no parallel recount).
+            boolean promptCheckSeedBox = seedBoxContentsUnknown && unmetSeedRequirement;
+            if (needsLunarSpellbook) {
+                plugin.addTextToInfoBox(FertileSoilHelper.SWITCH_TO_LUNAR_SPELLBOOK_INSTRUCTION);
+            } else if (promptCheckSeedBox) {
+                plugin.addTextToInfoBox("Check the Seed Box to read its contents");
+                highlightSeedBoxInInventory(graphics, items);
+                allItemsCollected = false;
+            } else {
+                plugin.addTextToInfoBox("Grab all the items needed");
             }
 
             // Sort missing items: tools first, then teleport items (basalts last among

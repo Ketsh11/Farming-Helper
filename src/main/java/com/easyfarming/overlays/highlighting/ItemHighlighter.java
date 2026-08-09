@@ -166,6 +166,7 @@ public class ItemHighlighter {
         return isQuetzalWhistleHighlight(itemId, targetId)
                 || isExplorersRingHighlight(itemId, targetId)
                 || isArdyCloakHighlight(itemId, targetId)
+                || isFarmingCapeHighlight(itemId, targetId)
                 || isSkillsNecklaceHighlight(itemId, targetId)
                 || isNecklaceOfPassageHighlight(itemId, targetId)
                 || isBottomlessBucketHighlight(itemId, targetId)
@@ -201,6 +202,13 @@ public class ItemHighlighter {
     }
     
     /**
+     * Checks if an item ID matches a Farming cape highlight pattern (untrimmed or trimmed).
+     */
+    private boolean isFarmingCapeHighlight(int itemId, int targetId) {
+        return farmingHelperOverlay.isFarmingCape(itemId) && farmingHelperOverlay.isFarmingCape(targetId);
+    }
+
+    /**
      * Checks if an item ID matches a Skills Necklace highlight pattern.
      */
     private boolean isSkillsNecklaceHighlight(int itemId, int targetId) {
@@ -231,34 +239,46 @@ public class ItemHighlighter {
     
     /**
      * Highlights allotment seeds in inventory.
+     * Also highlights the Seed Box (seeds can be planted directly from it).
      */
     public void highlightAllotmentSeeds(Graphics2D graphics) {
         Color useItemColor = colorProvider.getHighlightUseItemWithAlpha();
         highlightInventorySlotsWithIds(graphics, farmingHelperOverlay.getAllotmentSeedIds(), useItemColor);
+        highlightSeedBox(graphics, useItemColor);
     }
 
     /**
      * Highlights herb seeds in inventory.
+     * Also highlights the Seed Box (seeds can be planted directly from it).
      */
     public void highlightHerbSeeds(Graphics2D graphics) {
         Color color = colorProvider.getHighlightUseItemWithAlpha();
         highlightInventorySlotsWithIds(graphics, farmingHelperOverlay.getHerbSeedIds(), color);
+        highlightSeedBox(graphics, color);
     }
 
     /**
      * Highlights hops seeds in inventory.
+     * Also highlights the Seed Box (seeds can be planted directly from it).
      */
     public void highlightHopsSeeds(Graphics2D graphics) {
         Color color = colorProvider.getHighlightUseItemWithAlpha();
         highlightInventorySlotsWithIds(graphics, farmingHelperOverlay.getHopsSeedIds(), color);
+        highlightSeedBox(graphics, color);
     }
 
     /**
      * Highlights flower seeds in inventory (limpwurt, white lily, etc.).
+     * Also highlights the Seed Box (seeds can be planted directly from it).
      */
     public void highlightFlowerSeeds(Graphics2D graphics) {
         Color color = colorProvider.getHighlightUseItemWithAlpha();
         highlightInventorySlotsWithIds(graphics, farmingHelperOverlay.getFlowerSeedIds(), color);
+        highlightSeedBox(graphics, color);
+    }
+
+    private void highlightSeedBox(Graphics2D graphics, Color color) {
+        highlightInventorySlotsWithIds(graphics, farmingHelperOverlay.getSeedBoxIds(), color);
     }
 
     /**
